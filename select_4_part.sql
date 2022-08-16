@@ -59,7 +59,11 @@ SELECT name_or_alias
  GROUP BY name_or_alias;
 
 -- Запрос названия альбомов, содержащих наименьшее количество треков:
+
 SELECT album_name, COUNT(*) FROM tracks t
   JOIN albums a ON t.album_id = a.album_id
  GROUP BY album_name
-HAVING COUNT(*) = 1;
+HAVING COUNT(*) = (SELECT MIN(mycount)
+                     FROM (SELECT album_id, COUNT(*) mycount
+                             FROM tracks t
+                            GROUP BY album_id) foo);
